@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPS Builder — AWS D1.1 Welding Procedure Sheet</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg: #E9EDEF;
+  --grid-line: #d4dbe0;
+  --panel: #FFFFFF;
+  --ink: #1A2330;
+  --ink-soft: #57626E;
+  --line: #3D5A73;
+  --border: #C1CAD1;
+  --accent: #E8A33D;
+  --accent-ink: #4A2E05;
+  --safe-green: #4C7A5E;
+  --danger: #B23A34;
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  font-family:'Inter', sans-serif;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0/28px 28px,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0/28px 28px,
+    var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+
+.eyebrow{
+  font-family:'Oswald',sans-serif;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:11px;
+  color:var(--line);
+}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  padding:14px 24px;
+  background:var(--ink);
+  color:#fff;
+  border-bottom:4px solid var(--accent);
+}
+.topbar .brand{ display:flex; align-items:center; gap:12px; }
+.topbar .brand .mark{
+  width:34px; height:34px; border-radius:4px;
+  background:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-weight:700; color:var(--accent-ink);
+  font-size:15px;
+  transform:rotate(-2deg);
+}
+.topbar .brand h1{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:17px;
+  letter-spacing:.04em; margin:0; text-transform:uppercase;
+}
+.topbar .brand p{ margin:0; font-size:11px; color:#B7C2CC; letter-spacing:.05em; }
+
+.topbar .actions{ display:flex; gap:10px; align-items:center; }
+button{ font-family:'Inter',sans-serif; cursor:pointer; }
+.btn{
+  border:none; border-radius:3px; padding:10px 16px;
+  font-size:13px; font-weight:600; letter-spacing:.02em;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:active{ transform:translateY(1px); }
+.btn-accent{ background:var(--accent); color:var(--accent-ink); }
+.btn-accent:hover{ box-shadow:0 0 0 3px rgba(232,163,61,.35); }
+.btn-outline{ background:transparent; color:#fff; border:1px solid #4E5A66; }
+.btn-outline:hover{ border-color:#8B98A5; }
+
+/* ---------- Layout ---------- */
+.layout{
+  display:grid;
+  grid-template-columns:minmax(340px,460px) 1fr;
+  gap:22px;
+  max-width:1500px;
+  margin:22px auto;
+  padding:0 24px 60px;
+  align-items:start;
+}
+@media (max-width: 980px){
+  .layout{ grid-template-columns:1fr; }
+}
+
+/* ---------- Form panel ---------- */
+.form-panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.section{
+  border-bottom:1px solid var(--border);
+}
+.section:last-child{ border-bottom:none; }
+.section-head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding:14px 18px 10px;
+}
+.section-head .num{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft);
+}
+.section-body{
+  padding:2px 18px 18px;
+  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+}
+.section-body.single{ grid-template-columns:1fr; }
+.field{ display:flex; flex-direction:column; gap:5px; }
+.field.full{ grid-column:1 / -1; }
+.field label{
+  font-size:11px; font-weight:600; color:var(--ink-soft);
+  letter-spacing:.02em; text-transform:uppercase;
+}
+.field input, .field select{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:13px;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:3px;
+  background:#FBFCFD;
+  color:var(--ink);
+}
+.field input:focus, .field select:focus{
+  outline:none; border-color:var(--line); box-shadow:0 0 0 3px rgba(61,90,115,.14);
+}
+
+.ai-box{
+  grid-column:1/-1;
+  margin-top:4px;
+  padding:12px;
+  border:1px dashed #C9A46A;
+  border-radius:5px;
+  background:#FFF8EB;
+  display:flex; flex-direction:column; gap:10px;
+}
+.ai-box .ai-row{ display:flex; gap:8px; align-items:center; }
+.ai-box input[type=password]{
+  flex:1; font-family:'IBM Plex Mono',monospace; font-size:12px;
+  padding:7px 9px; border:1px solid var(--border); border-radius:3px;
+}
+.ai-status{ font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; min-height:14px; }
+.ai-status.err{ color:var(--danger); }
+.ai-status.ok{ color:var(--safe-green); }
+.spark{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent); }
+.spark.spin{ animation:pulse 0.7s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.4; transform:scale(1.6);} }
+
+/* ---------- Sheet preview ---------- */
+.sheet-wrap{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:26px;
+}
+.sheet{
+  border:2px solid var(--ink);
+  font-family:'Inter',sans-serif;
+  color:var(--ink);
+}
+.sheet-title{
+  display:flex; justify-content:space-between; align-items:stretch;
+  border-bottom:2px solid var(--ink);
+}
+.sheet-title .t-main{
+  padding:16px 20px; flex:1;
+}
+.sheet-title .t-main .kicker{
+  font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--line); margin:0 0 4px;
+}
+.sheet-title .t-main h2{
+  font-family:'Oswald',sans-serif; font-size:24px; margin:0; letter-spacing:.01em;
+}
+.stampblock{
+  width:230px; border-left:2px solid var(--ink);
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+}
+.stampblock .row{
+  display:flex; border-bottom:1px solid var(--border);
+}
+.stampblock .row:last-child{ border-bottom:none; }
+.stampblock .row div{ padding:6px 8px; }
+.stampblock .row .k{ width:46%; color:var(--ink-soft); background:#F3F5F6; border-right:1px solid var(--border); }
+.stampblock .row .v{ width:54%; font-weight:600; }
+
+.sheet-section-title{
+  font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; background:var(--ink); color:#fff;
+  padding:6px 20px;
+}
+.sheet-grid{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid var(--border);
+}
+.sheet-grid .cell{
+  padding:10px 16px; border-right:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+.sheet-grid .cell:nth-child(3n){ border-right:none; }
+.sheet-grid .cell .k{
+  font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); margin-bottom:3px;
+}
+.sheet-grid .cell .v{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; min-height:16px;
+}
+.sheet-grid .cell .v.empty{ color:#B7C2CC; font-weight:400; }
+
+.sheet-footer{
+  display:grid; grid-template-columns:1fr 1fr;
+}
+.sheet-footer .sig{
+  padding:16px 20px; border-top:2px solid var(--ink);
+}
+.sheet-footer .sig:first-child{ border-right:1px solid var(--border); }
+.sheet-footer .sig .k{ font-size:10px; text-transform:uppercase; color:var(--ink-soft); letter-spacing:.06em; }
+.sheet-footer .sig .line{ margin-top:22px; border-top:1px solid var(--ink); padding-top:5px; font-family:'IBM Plex Mono',monospace; font-size:12px; }
+
+/* ---------- Print ---------- */
+@media print{
+  body{ background:#fff !important; }
+  .topbar, .form-panel{ display:none !important; }
+  .layout{ display:block; margin:0; padding:0; max-width:none; }
+  .sheet-wrap{ border:none; padding:0; }
+  .sheet{ border:2px solid #000; }
+  .sheet-section-title{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+
+.hint{
+  font-size:11px; color:var(--ink-soft); padding:10px 18px 16px; line-height:1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">L</div>
+    <div>
+      <h1>Lanix WPS Builder</h1>
+      <p>AWS D1.1 Structural Steel — Welding Procedure Specification</p>
+    </div>
+  </div>
+  <div class="actions">
+    <a href="index.html" style="color:#B7C2CC;font-size:12px;letter-spacing:.05em;text-decoration:none;margin-right:6px;">← Lanix Academy</a>
+    <button class="btn btn-outline" onclick="loadSample()">Load sample</button>
+    <button class="btn btn-outline" onclick="resetForm()">Clear</button>
+    <button class="btn btn-accent" onclick="window.print()">⎙ Export / Print PDF</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 01</span><span class="num">Identification</span></div>
+      <div class="section-body">
+        <div class="field full"><label>Company</label><input id="companyName" oninput="render()" placeholder="Acme Fabrication Co." value="LANIX SHIPPING AND INDUSTRIAL ACADEMY"></div>
+        <div class="field full"><label>Address</label><input id="companyAddress" oninput="render()" placeholder="Street, City, State - PIN" value="First Floor, RJ Plaza, Kirathoor, K.K. Dist, Tamil Nadu - 629160"></div>
+        <div class="field full"><label>Email</label><input id="companyEmail" oninput="render()" placeholder="name@company.com" value="lanix.institution@gmail.com"></div>
+        <div class="field"><label>WPS No.</label><input id="wpsNumber" oninput="render()" placeholder="WPS-101"></div>
+        <div class="field"><label>Revision</label><input id="revision" oninput="render()" placeholder="A"></div>
+        <div class="field"><label>Date</label><input id="date" type="date" oninput="render()"></div>
+        <div class="field"><label>Supporting PQR No.</label><input id="pqrNumber" oninput="render()" placeholder="PQR-101"></div>
+        <div class="field"><label>Process Type</label>
+          <select id="processType" onchange="render()">
+            <option>Manual</option><option>Semi-Automatic</option><option>Machine</option><option>Automatic</option>
+          </select>
+        </div>
+        <div class="field full"><label>Welding Process</label>
+          <select id="weldingProcess" onchange="render()">
+            <option>SMAW</option><option>GMAW</option><option>FCAW-G</option><option>FCAW-S</option><option>SAW</option><option>GTAW</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 02</span><span class="num">Joint design</span></div>
+      <div class="section-body">
+        <div class="field full"><label>Joint Type</label>
+          <select id="jointType" onchange="render()">
+            <option>Groove — Butt</option><option>Groove — Corner</option><option>Groove — Tee</option><option>Fillet</option><option>Lap</option>
+          </select>
+        </div>
+        <div class="field"><label>Backing</label>
+          <select id="backing" onchange="render()">
+            <option>None</option><option>Steel</option><option>Ceramic</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Groove Angle (°)</label><input id="grooveAngle" oninput="render()" placeholder="45"></div>
+        <div class="field"><label>Root Opening</label><input id="rootOpening" oninput="render()" placeholder="1/8 in"></div>
+        <div class="field"><label>Root Face</label><input id="rootFace" oninput="render()" placeholder="1/16 in"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 03</span><span class="num">Base metal</span></div>
+      <div class="section-body">
+        <div class="field full"><label>Material Specification</label><input id="baseSpec" oninput="render()" placeholder="ASTM A36 / A992"></div>
+        <div class="field"><label>Group / Class</label><input id="baseGroup" oninput="render()" placeholder="Group I"></div>
+        <div class="field"><label>Thickness — Groove</label><input id="thicknessGroove" oninput="render()" placeholder="1/4–1 1/2 in"></div>
+        <div class="field"><label>Thickness — Fillet</label><input id="thicknessFillet" oninput="render()" placeholder="All"></div>
+        <div class="field"><label>Diameter (pipe, opt.)</label><input id="diameterRange" oninput="render()" placeholder="—"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 04</span><span class="num">Filler metal</span></div>
+      <div class="section-body">
+        <div class="field"><label>AWS Specification</label><input id="awsSpec" oninput="render()" placeholder="A5.1"></div>
+        <div class="field"><label>AWS Classification</label><input id="awsClass" oninput="render()" placeholder="E7018"></div>
+        <div class="field"><label>F-Number</label><input id="fNumber" oninput="render()" placeholder="F4"></div>
+        <div class="field"><label>Shielding Gas</label><input id="shieldingGas" oninput="render()" placeholder="75Ar/25CO2"></div>
+        <div class="field full"><label>Gas Flow Rate</label><input id="gasFlowRate" oninput="render()" placeholder="35–40 CFH"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 05</span><span class="num">Position</span></div>
+      <div class="section-body">
+        <div class="field"><label>Groove Position</label>
+          <select id="groovePosition" onchange="render()">
+            <option>1G</option><option>2G</option><option>3G</option><option>4G</option><option>5G</option><option>6G</option>
+          </select>
+        </div>
+        <div class="field"><label>Fillet Position</label>
+          <select id="filletPosition" onchange="render()">
+            <option>1F</option><option>2F</option><option>3F</option><option>4F</option>
+          </select>
+        </div>
+        <div class="field full"><label>Vertical Progression</label>
+          <select id="progression" onchange="render()">
+            <option>N/A</option><option>Up</option><option>Down</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 06</span><span class="num">Preheat &amp; interpass</span></div>
+      <div class="section-body">
+        <div class="field"><label>Preheat Min (°F)</label><input id="preheatMin" oninput="render()" placeholder="50"></div>
+        <div class="field"><label>Interpass Max (°F)</label><input id="interpassMax" oninput="render()" placeholder="550"></div>
+        <div class="field full"><label>Post-Weld Heat Treat (opt.)</label><input id="pwht" oninput="render()" placeholder="None"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 07</span><span class="num">Electrical characteristics</span></div>
+      <div class="section-body">
+        <div class="field"><label>Current Type</label>
+          <select id="currentType" onchange="render()">
+            <option>DCEP</option><option>DCEN</option><option>AC</option>
+          </select>
+        </div>
+        <div class="field"><label>Amperage Range (A)</label><input id="amperageRange" oninput="render()" placeholder="110–150"></div>
+        <div class="field"><label>Voltage Range (V)</label><input id="voltageRange" oninput="render()" placeholder="21–24"></div>
+        <div class="field"><label>Travel Speed (in/min)</label><input id="travelSpeed" oninput="render()" placeholder="4–8"></div>
+        <div class="field full"><label>Wire Feed Speed (in/min, if applicable)</label><input id="wireFeedSpeed" oninput="render()" placeholder="—"></div>
+
+        <div class="ai-box">
+          <div class="ai-row">
+            <span class="eyebrow" style="color:#8A6114;">AI Auto-Suggest</span>
+          </div>
+          <div class="ai-row">
+            <input type="password" id="apiKey" placeholder="sk-... (your OpenAI API key, stays in this browser only)">
+            <button class="btn btn-accent" id="aiBtn" onclick="suggestElectrical()">Suggest values</button>
+          </div>
+          <div class="ai-status" id="aiStatus"><span class="spark" id="aiSpark" style="display:none;"></span> <span id="aiStatusText">Fills amperage, voltage, travel speed, wire feed speed, and preheat min from process + base metal + filler + position.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 08</span><span class="num">Technique</span></div>
+      <div class="section-body">
+        <div class="field"><label>String / Weave</label>
+          <select id="stringWeave" onchange="render()">
+            <option>String</option><option>Weave</option>
+          </select>
+        </div>
+        <div class="field"><label>Pass / Layers</label><input id="passLayers" oninput="render()" placeholder="Multiple"></div>
+        <div class="field"><label>Electrode Count</label><input id="electrodeCount" oninput="render()" placeholder="Single"></div>
+        <div class="field"><label>Peening</label>
+          <select id="peening" onchange="render()">
+            <option>None</option><option>Yes</option>
+          </select>
+        </div>
+        <div class="field full"><label>Interpass Cleaning</label><input id="cleaning" oninput="render()" placeholder="Wire brush between passes"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="eyebrow">Section 09</span><span class="num">Approval</span></div>
+      <div class="section-body">
+        <div class="field"><label>Prepared By</label><input id="preparedBy" oninput="render()"></div>
+        <div class="field"><label>Date</label><input id="preparedDate" type="date" oninput="render()"></div>
+        <div class="field"><label>Reviewed By</label><input id="reviewedBy" oninput="render()"></div>
+        <div class="field"><label>Date</label><input id="reviewedDate" type="date" oninput="render()"></div>
+      </div>
+      <div class="hint">Fields left blank appear as "—" on the printed sheet. This tool produces a working WPS draft — have it reviewed and signed by a qualified welding engineer before use in production.</div>
+    </div>
+
+  </div>
+
+  <!-- SHEET PREVIEW -->
+  <div class="sheet-wrap">
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+</div>
+
+<script>
+const ids = ['companyName','companyAddress','companyEmail','wpsNumber','revision','date','pqrNumber','weldingProcess','processType',
+'jointType','backing','grooveAngle','rootOpening','rootFace',
+'baseSpec','baseGroup','thicknessGroove','thicknessFillet','diameterRange',
+'awsSpec','awsClass','fNumber','shieldingGas','gasFlowRate',
+'groovePosition','filletPosition','progression',
+'preheatMin','interpassMax','pwht',
+'currentType','amperageRange','voltageRange','travelSpeed','wireFeedSpeed',
+'stringWeave','passLayers','electrodeCount','peening','cleaning',
+'preparedBy','preparedDate','reviewedBy','reviewedDate'];
+
+function val(id){
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function disp(id){
+  const v = val(id);
+  return v ? {v, empty:false} : {v:'—', empty:true};
+}
+function cell(label, id){
+  const d = disp(id);
+  return `<div class="cell"><div class="k">${label}</div><div class="v ${d.empty?'empty':''}">${escapeHtml(d.v)}</div></div>`;
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render(){
+  const sheet = document.getElementById('sheet');
+  sheet.innerHTML = `
+    <div class="sheet-title">
+      <div class="t-main">
+        <p class="kicker">Welding Procedure Specification — AWS D1.1</p>
+        <h2>${escapeHtml(val('companyName') || 'Company Name')}</h2>
+        <p style="margin:6px 0 0; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); line-height:1.5;">
+          ${escapeHtml(val('companyAddress') || '—')}<br>
+          ${escapeHtml(val('companyEmail') || '—')}
+        </p>
+      </div>
+      <div class="stampblock">
+        <div class="row"><div class="k">WPS No.</div><div class="v">${escapeHtml(val('wpsNumber')||'—')}</div></div>
+        <div class="row"><div class="k">Rev.</div><div class="v">${escapeHtml(val('revision')||'—')}</div></div>
+        <div class="row"><div class="k">Date</div><div class="v">${escapeHtml(val('date')||'—')}</div></div>
+        <div class="row"><div class="k">PQR No.</div><div class="v">${escapeHtml(val('pqrNumber')||'—')}</div></div>
+      </div>
+    </div>
+
+    <div class="sheet-section-title">Process</div>
+    <div class="sheet-grid">
+      ${cell('Welding Process','weldingProcess')}
+      ${cell('Process Type','processType')}
+      ${cell('Vertical Progression','progression')}
+    </div>
+
+    <div class="sheet-section-title">Joint Design</div>
+    <div class="sheet-grid">
+      ${cell('Joint Type','jointType')}
+      ${cell('Backing','backing')}
+      ${cell('Groove Angle','grooveAngle')}
+      ${cell('Root Opening','rootOpening')}
+      ${cell('Root Face','rootFace')}
+    </div>
+
+    <div class="sheet-section-title">Base Metal</div>
+    <div class="sheet-grid">
+      ${cell('Material Spec','baseSpec')}
+      ${cell('Group / Class','baseGroup')}
+      ${cell('Thickness — Groove','thicknessGroove')}
+      ${cell('Thickness — Fillet','thicknessFillet')}
+      ${cell('Diameter (pipe)','diameterRange')}
+    </div>
+
+    <div class="sheet-section-title">Filler Metal</div>
+    <div class="sheet-grid">
+      ${cell('AWS Spec.','awsSpec')}
+      ${cell('AWS Class.','awsClass')}
+      ${cell('F-Number','fNumber')}
+      ${cell('Shielding Gas','shieldingGas')}
+      ${cell('Gas Flow Rate','gasFlowRate')}
+    </div>
+
+    <div class="sheet-section-title">Position</div>
+    <div class="sheet-grid">
+      ${cell('Groove Position','groovePosition')}
+      ${cell('Fillet Position','filletPosition')}
+      ${cell('Preheat Min','preheatMin')}
+    </div>
+
+    <div class="sheet-section-title">Electrical Characteristics</div>
+    <div class="sheet-grid">
+      ${cell('Current Type','currentType')}
+      ${cell('Amperage Range','amperageRange')}
+      ${cell('Voltage Range','voltageRange')}
+      ${cell('Travel Speed','travelSpeed')}
+      ${cell('Wire Feed Speed','wireFeedSpeed')}
+      ${cell('Interpass Max','interpassMax')}
+    </div>
+
+    <div class="sheet-section-title">Technique</div>
+    <div class="sheet-grid">
+      ${cell('String / Weave','stringWeave')}
+      ${cell('Pass / Layers','passLayers')}
+      ${cell('Electrode Count','electrodeCount')}
+      ${cell('Peening','peening')}
+      ${cell('Interpass Cleaning','cleaning')}
+      ${cell('PWHT','pwht')}
+    </div>
+
+    <div class="sheet-footer">
+      <div class="sig">
+        <div class="k">Prepared By</div>
+        <div class="line">${escapeHtml(val('preparedBy')||'—')} &nbsp;·&nbsp; ${escapeHtml(val('preparedDate')||'—')}</div>
+      </div>
+      <div class="sig">
+        <div class="k">Reviewed By</div>
+        <div class="line">${escapeHtml(val('reviewedBy')||'—')} &nbsp;·&nbsp; ${escapeHtml(val('reviewedDate')||'—')}</div>
+      </div>
+    </div>
+  `;
+}
+
+function resetForm(){
+  const keep = ['companyName','companyAddress','companyEmail'];
+  ids.forEach(id=>{
+    if(keep.includes(id)) return;
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  render();
+}
+
+function loadSample(){
+  const sample = {
+    companyName:'LANIX SHIPPING AND INDUSTRIAL ACADEMY',
+    companyAddress:'First Floor, RJ Plaza, Kirathoor, K.K. Dist, Tamil Nadu - 629160',
+    companyEmail:'lanix.institution@gmail.com',
+    wpsNumber:'WPS-101', revision:'A', date:'2026-07-23',
+    pqrNumber:'PQR-101', weldingProcess:'SMAW', processType:'Manual',
+    jointType:'Groove — Butt', backing:'None', grooveAngle:'45', rootOpening:'1/8 in', rootFace:'1/16 in',
+    baseSpec:'ASTM A36', baseGroup:'Group I', thicknessGroove:'1/4–1 1/2 in', thicknessFillet:'All', diameterRange:'—',
+    awsSpec:'A5.1', awsClass:'E7018', fNumber:'F4', shieldingGas:'N/A', gasFlowRate:'N/A',
+    groovePosition:'3G', filletPosition:'3F', progression:'Up',
+    preheatMin:'50', interpassMax:'550', pwht:'None',
+    currentType:'DCEP', amperageRange:'', voltageRange:'', travelSpeed:'', wireFeedSpeed:'—',
+    stringWeave:'Weave', passLayers:'Multiple', electrodeCount:'Single', peening:'None', cleaning:'Wire brush between passes',
+    preparedBy:'', preparedDate:'', reviewedBy:'', reviewedDate:''
+  };
+  Object.entries(sample).forEach(([id,v])=>{
+    const el = document.getElementById(id);
+    if(el) el.value = v;
+  });
+  render();
+}
+
+async function suggestElectrical(){
+  const key = val('apiKey');
+  const statusText = document.getElementById('aiStatusText');
+  const statusWrap = document.getElementById('aiStatus');
+  const spark = document.getElementById('aiSpark');
+  const btn = document.getElementById('aiBtn');
+
+  if(!key){
+    statusWrap.className = 'ai-status err';
+    statusText.textContent = 'Enter your OpenAI API key above first.';
+    return;
+  }
+
+  const context = {
+    process: val('weldingProcess'),
+    processType: val('processType'),
+    baseSpec: val('baseSpec') || 'mild carbon steel',
+    thicknessGroove: val('thicknessGroove') || 'unspecified',
+    fillerClass: val('awsClass') || 'unspecified',
+    position: val('groovePosition') || val('filletPosition') || '1G',
+    jointType: val('jointType'),
+    currentType: val('currentType')
+  };
+
+  btn.disabled = true;
+  spark.style.display = 'inline-block';
+  spark.classList.add('spin');
+  statusWrap.className = 'ai-status';
+  statusText.textContent = 'Requesting suggested parameters…';
+
+  try{
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + key
+      },
+      body: JSON.stringify({
+        model:'gpt-4o-mini',
+        messages:[
+          { role:'system', content:'You are a certified welding engineer (CWE) generating typical, code-plausible AWS D1.1 welding parameters. Respond ONLY with a raw JSON object, no markdown fences, no commentary, with exactly these keys: amperageRange, voltageRange, travelSpeed, wireFeedSpeed, preheatMin. Values are short strings with units (e.g. "110-150 A", "50 F"). Use "—" for wireFeedSpeed if not applicable to the given process (e.g. SMAW, GTAW).' },
+          { role:'user', content:
+            `Process: ${context.process} (${context.processType})\n`+
+            `Current type: ${context.currentType}\n`+
+            `Base metal: ${context.baseSpec}, thickness: ${context.thicknessGroove}\n`+
+            `Filler classification: ${context.fillerClass}\n`+
+            `Joint type: ${context.jointType}\n`+
+            `Welding position: ${context.position}\n\n`+
+            `Suggest typical amperage range, voltage range, travel speed, wire feed speed (if applicable), and minimum preheat temperature for this AWS D1.1 procedure.` }
+        ],
+        temperature:0.3
+      })
+    });
+
+    if(!resp.ok){
+      const errBody = await resp.text();
+      throw new Error(`API error ${resp.status}: ${errBody.slice(0,150)}`);
+    }
+
+    const data = await resp.json();
+    let raw = data.choices?.[0]?.message?.content?.trim() || '';
+    raw = raw.replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+    const parsed = JSON.parse(raw);
+
+    if(parsed.amperageRange) document.getElementById('amperageRange').value = parsed.amperageRange;
+    if(parsed.voltageRange) document.getElementById('voltageRange').value = parsed.voltageRange;
+    if(parsed.travelSpeed) document.getElementById('travelSpeed').value = parsed.travelSpeed;
+    if(parsed.wireFeedSpeed) document.getElementById('wireFeedSpeed').value = parsed.wireFeedSpeed;
+    if(parsed.preheatMin) document.getElementById('preheatMin').value = parsed.preheatMin;
+
+    render();
+    statusWrap.className = 'ai-status ok';
+    statusText.textContent = 'Suggested values filled in — verify against your PQR before use.';
+  }catch(err){
+    statusWrap.className = 'ai-status err';
+    statusText.textContent = 'Could not get suggestions: ' + err.message;
+  }finally{
+    btn.disabled = false;
+    spark.classList.remove('spin');
+    spark.style.display = 'none';
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
